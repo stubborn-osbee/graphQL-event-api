@@ -11,12 +11,29 @@ app.get(
   "/graphql",
   graphqlHttp({
     schema: BuildSchema(`
+        type RootQuery {
+         events : [String!]!
+
+        },
+        type RootMutation{
+           changeEvent (name : String) : string
+        }
          schema {
-             query:
-             mutation:
+             query: RootQuery
+             mutation: RootMutation
          }
         `),
-    rootValue: {}
+    rootValue: {
+      events: () => {
+        return ["All night coding, React, GraphQl"];
+      },
+      createEvent: args => {
+        const eventName = args.name;
+        return eventName;
+      }
+    },
+
+    graphiql: true
   })
 );
 
